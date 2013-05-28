@@ -1,16 +1,16 @@
 <?php
 /* Описание схемы обмена Яндекс.Недвижимость: http://help.yandex.ru/webmaster/?id=1113400 */
 
-// Идентификатор магазина
-$shop_id = 2;
-
 @ini_set('display_errors', 1);
 error_reporting(E_ALL);
 @set_time_limit(90000);
 
+// Идентификатор магазина
+$iShopId = 2;
+
 header("Content-Type: text/xml; charset=UTF-8");
 
-require_once(dirname(__FILE__) . '/' . 'bootstrap.php');
+require_once(dirname(__FILE__) . '/' . 'bootstrap.php'); //Подключаем bootstrap.php
 
 echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
 echo '<realty-feed xmlns="http://webmaster.yandex.ru/schemas/feed/realty/2010-06">'."\n";
@@ -18,9 +18,9 @@ echo '<generation-date>'. date('c') . '</generation-date>'."\n";
 
 $dateTime = Core_Date::timestamp2sql(time());
 
-$oShop = Core_Entity::factory('Shop', $shop_id);
+$oShop = Core_Entity::factory('Shop', $iShopId);
 
-$oShop_Item_Property_List = Core_Entity::factory('Shop_Item_Property_List', $shop_id);
+$oShop_Item_Property_List = Core_Entity::factory('Shop_Item_Property_List', $iShopId);
 
 $oSite_Alias = $oShop->Site->getCurrentAlias();
 
@@ -47,7 +47,7 @@ $oShop_Items->queryBuilder()
 	->orderBy('name', 'ASC')
 	;
 
-/* Описание параметров, входящих в элемент <offer> */
+/* Описание параметров, входящих в элемент */
 $aListTags = array(
 	/* Основные */
 	'type',
@@ -66,6 +66,7 @@ $aListTags = array(
 	'with-children',
 	'renovation',
 	'lot-type',
+
 	/* Описание жилого помещения */
 	'new-flat',
 	'rooms',
@@ -83,6 +84,7 @@ $aListTags = array(
 	'bathroom-unit',
 	'floor-covering',
 	'window-view',
+
 	/* Описание здания  */
 	'floors-total',
 	'building-name',
@@ -97,6 +99,7 @@ $aListTags = array(
 	'parking',
 	'alarm',
 	'ceiling-height',
+
 	/* Для загородной недвижимости */
 	'pmg',
 	'toilet',
@@ -111,8 +114,9 @@ $aListTags = array(
 	'gas-supply',
 );
 
-$aShop_Items = $oShop_Items->findAll();
+$aShop_Items = $oShop_Items->findAll(FALSE);
 
+/* Получаем свойства по имени */
 $aListProperties = array();
 foreach ($aListTags as $tagName)
 {
@@ -138,6 +142,7 @@ $aLocationTags = array(
 	'railway-station',
 );
 
+/* Получаем свойства по имени */
 $aLocationProperties = array();
 foreach ($aLocationTags as $locationTagName)
 {
