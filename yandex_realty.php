@@ -1,16 +1,16 @@
 <?php
-/* Описание схемы обмена Яндекс.Недвижимость: http://help.yandex.ru/webmaster/?id=1113400 */
+/* РћРїРёСЃР°РЅРёРµ СЃС…РµРјС‹ РѕР±РјРµРЅР° РЇРЅРґРµРєСЃ.РќРµРґРІРёР¶РёРјРѕСЃС‚СЊ: http://help.yandex.ru/webmaster/?id=1113400 */
 
 @ini_set('display_errors', 1);
 error_reporting(E_ALL);
 @set_time_limit(90000);
 
-// Идентификатор магазина
+// РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РјР°РіР°Р·РёРЅР°
 $iShopId = 2;
 
 header("Content-Type: text/xml; charset=UTF-8");
 
-require_once(dirname(__FILE__) . '/' . 'bootstrap.php'); //Подключаем bootstrap.php
+require_once(dirname(__FILE__) . '/' . 'bootstrap.php'); //РџРѕРґРєР»СЋС‡Р°РµРј bootstrap.php
 
 echo '<?xml version="1.0" encoding="utf-8"?>'."\n";
 echo '<realty-feed xmlns="http://webmaster.yandex.ru/schemas/feed/realty/2010-06">'."\n";
@@ -47,9 +47,9 @@ $oShop_Items->queryBuilder()
 	->orderBy('name', 'ASC')
 	;
 
-/* Описание параметров, входящих в элемент */
+/* РћРїРёСЃР°РЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ, РІС…РѕРґСЏС‰РёС… РІ СЌР»РµРјРµРЅС‚ */
 $aListTags = array(
-	/* Основные */
+	/* РћСЃРЅРѕРІРЅС‹Рµ */
 	'type',
 	'property-type',
 	'category',
@@ -67,7 +67,7 @@ $aListTags = array(
 	'renovation',
 	'lot-type',
 
-	/* Описание жилого помещения */
+	/* РћРїРёСЃР°РЅРёРµ Р¶РёР»РѕРіРѕ РїРѕРјРµС‰РµРЅРёСЏ */
 	'new-flat',
 	'rooms',
 	'rooms-offered',
@@ -85,7 +85,7 @@ $aListTags = array(
 	'floor-covering',
 	'window-view',
 
-	/* Описание здания  */
+	/* РћРїРёСЃР°РЅРёРµ Р·РґР°РЅРёСЏ  */
 	'floors-total',
 	'building-name',
 	'building-type',
@@ -100,7 +100,7 @@ $aListTags = array(
 	'alarm',
 	'ceiling-height',
 
-	/* Для загородной недвижимости */
+	/* Р”Р»СЏ Р·Р°РіРѕСЂРѕРґРЅРѕР№ РЅРµРґРІРёР¶РёРјРѕСЃС‚Рё */
 	'pmg',
 	'toilet',
 	'shower',
@@ -116,7 +116,7 @@ $aListTags = array(
 
 $aShop_Items = $oShop_Items->findAll(FALSE);
 
-/* Получаем свойства по имени */
+/* РџРѕР»СѓС‡Р°РµРј СЃРІРѕР№СЃС‚РІР° РїРѕ РёРјРµРЅРё */
 $aListProperties = array();
 foreach ($aListTags as $tagName)
 {
@@ -142,14 +142,14 @@ $aLocationTags = array(
 	'railway-station',
 );
 
-/* Получаем свойства по имени */
+/* РџРѕР»СѓС‡Р°РµРј СЃРІРѕР№СЃС‚РІР° РїРѕ РёРјРµРЅРё */
 $aLocationProperties = array();
 foreach ($aLocationTags as $locationTagName)
 {
 	$aLocationProperties[$locationTagName] = $oShop_Item_Property_List->Properties->getByTag_name($locationTagName);
 }
 
-/* Информация о площадях объекта */
+/* РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»РѕС‰Р°РґСЏС… РѕР±СЉРµРєС‚Р° */
 $aAreaTags = array(
 	'area',
 	'living-space',
@@ -166,7 +166,7 @@ foreach ($aAreaTags as $areaTagName)
 
 foreach ($aShop_Items as $oShop_Item)
 {
-	/* Объявление */
+	/* РћР±СЉСЏРІР»РµРЅРёРµ */
 	echo '<offer internal-id="'. $oShop_Item->id . '">'."\n";
 
 		foreach ($aListTags as $tagName)
@@ -190,7 +190,7 @@ foreach ($aShop_Items as $oShop_Item)
 			: Core_Date::sql2timestamp($oShop_Item->end_datetime)) . '</expire-date>'."\n";
 		echo '<last-update-date>' . date('c', Core_Date::sql2timestamp($oShop_Item->datetime)) . '</last-update-date>'."\n";
 
-		/* Информация о местоположении */
+		/* РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РјРµСЃС‚РѕРїРѕР»РѕР¶РµРЅРёРё */
 		echo '<location>'."\n";
 			foreach ($aLocationTags as $locationTagName)
 			{
@@ -207,7 +207,7 @@ foreach ($aShop_Items as $oShop_Item)
 			}
 		echo '</location>'."\n";
 
-		/* Информация о продавце */
+		/* РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїСЂРѕРґР°РІС†Рµ */
 		echo '<sales-agent>'."\n";
 			if ($oShop_Item->Shop_Seller->contact_person != '')
 			{
@@ -228,7 +228,7 @@ foreach ($aShop_Items as $oShop_Item)
 			}
 		echo '</sales-agent>'."\n";
 
-		/* Информация о сделке */
+		/* РРЅС„РѕСЂРјР°С†РёСЏ Рѕ СЃРґРµР»РєРµ */
 		echo '<price>'."\n";
 			echo '<value>' . $oShop_Item->price . '</value>'."\n";
 			echo '<currency>' . $oShop_Item->Shop_Currency->code . '</currency>'."\n";
